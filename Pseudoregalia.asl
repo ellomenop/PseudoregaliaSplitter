@@ -9,9 +9,9 @@ state("pseudoregalia-Win64-Shipping")
     byte key4: 0x06496640, 0x1B8, 0x033C;                           //Sansa Keep Key
     byte key5: 0x06496640, 0x1B8, 0x0488;                           //Twilight Key
     byte DB: 0x6496640, 0x1B8, 0x1D8, 0x8;                          //1 when picking up dream breaker, 0 when not
-    byte empathy: 0x6496640, 0x1B8, 0x1D8, 0x134;                   //Increases by 1 when picking up Empathy   
-    byte GG: 0x6496640, 0x1B8, 0x1D8, 0x148;                        //Increases by 1 when picking up Good Grace  
-    byte CM: 0x6496640, 0x1B8, 0x1D8, 0x184;                        //Increases by 1 when picking up Clear Mind  
+    byte empathy: 0x6496640, 0x1B8, 0x1D8, 0x134;                   //Increases by 1 when picking up Empathy
+    byte GG: 0x6496640, 0x1B8, 0x1D8, 0x148;                        //Increases by 1 when picking up Good Grace
+    byte CM: 0x6496640, 0x1B8, 0x1D8, 0x184;                        //Increases by 1 when picking up Clear Mind
     byte menuStart: 0x645D318;                                      //Ingame 1; Menu 0
     int bossPhase: 0x06496640, 0x30, 0xE8, 0x2A8, 0x764;    	    //1 when the boss is dead, 0 when the boss isnt dead, null when boss isnt available
     int keyItem: 0x06496640, 0x1B8, 0x470;                          //Use settings as reference
@@ -38,13 +38,21 @@ startup
     "Sansa Keep > The Underbelly", "Sansa Keep > Twilight Theatre", "The Underbelly > Dilapidated Dungeon", "The Underbelly > Empty Bailey", "The Underbelly > Sansa Keep ",
     "Twilight Theatre > Dilapidated Dungeon", "Twilight Theatre > Castle Sansa (2)", "Twilight Theatre > Empty Bailey", "Twilight Theatre > Sansa Keep",
     "Tower Remains > Empty Bailey", "Tower Remains > Final Boss Arena", "Final Boss Arena > Tower Remains"};
-    
+
     vars.completedSplits = new List<int>();
 
     //vars.areaSplitsSettings = new List<String>()
     //{"Dungeon", "Castle Sansa", "Sansa Keep", "Empty Bailey", "Listless Library", "The Underbelly", "Tower Remains", "Twilight Theatre", "Princess Chambers"};
 
     settings.Add("Golden Keys");
+    settings.CurrentDefaultParent = "Golden Keys";
+    settings.Add("Empty Bailey Key");
+    settings.Add("Underbelly Key");
+    settings.Add("Tower Remains Key");
+    settings.Add("Sansa Keep Key");
+    settings.Add("Twilight Theatre Key");
+    settings.CurrentDefaultParent = null;
+
     //settings.Add("Silver Keys");
     settings.Add("Health Upgrades");
     settings.Add("Item Splits");
@@ -86,7 +94,7 @@ init
     vars.tower = 0;
     vars.sansa = 0;
     vars.twilight = 0;
-    
+
     vars.areaSplit = new List<Tuple<String, String, int>>(){
         Tuple.Create("ZONE_Dungeon", "ZONE_LowerCastle", 0),
         Tuple.Create("ZONE_Dungeon", "Zone_Caves", 1),
@@ -127,27 +135,27 @@ start
 split
 {
     if(settings["Golden Keys"]){
-        if(current.key1 == 1 && old.key1 == 0 && vars.empty == 0){
+        if(current.key1 == 1 && old.key1 == 0 && vars.empty == 0 && settings["Empty Bailey Key"]){
             vars.empty = 1;
             return true;
         }
 
-        if(current.key2 == 1 && old.key2 == 0 && vars.underbelly == 0){
+        if(current.key2 == 1 && old.key2 == 0 && vars.underbelly == 0 && settings["Underbelly Key"]){
             vars.underbelly = 1;
             return true;
         }
 
-        if(current.key3 == 1 && old.key3 == 0 && vars.tower == 0){
+        if(current.key3 == 1 && old.key3 == 0 && vars.tower == 0 && settings["Tower Remains Key"]){
             vars.tower = 1;
             return true;
         }
 
-        if(current.key4 == 1 && old.key4 == 0 && vars.sansa == 0){
+        if(current.key4 == 1 && old.key4 == 0 && vars.sansa == 0 && settings["Sansa Keep Key"]){
             vars.sansa = 1;
             return true;
         }
 
-        if(current.key5 == 1 && old.key5 == 0 && vars.twilight == 0){
+        if(current.key5 == 1 && old.key5 == 0 && vars.twilight == 0 && settings["Twilight Theatre Key"]){
             vars.twilight = 1;
             return true;
         }
